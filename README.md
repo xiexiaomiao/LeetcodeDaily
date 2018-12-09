@@ -201,7 +201,7 @@ class MyStack {
 解法：
 用两个栈，一个栈正常操作，另一个栈存储当前最小值。
 
-···Java
+```Java
 class MinStack {
     Stack<Integer> s1;
     Stack<Integer> s2;
@@ -233,4 +233,4 @@ class MinStack {
         return s2.peek();
     }
 }
-···
+```
