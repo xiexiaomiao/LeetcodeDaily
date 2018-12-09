@@ -200,6 +200,7 @@ class MyStack {
 
 解法：
 用两个栈，一个栈正常操作，另一个栈存储当前最小值。
+
 ···Java
 class MinStack {
     Stack<Integer> s1;
