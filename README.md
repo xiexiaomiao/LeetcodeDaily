@@ -1,8 +1,8 @@
 # LeetcodeDaily
 记录刷leetcode的日常
 先从简单难度开始按标签刷起。
-[TOC]
-## 关于栈的题目
+
+## 栈的题目
 栈（Stack）是后进先出的列表，常用操作有push（添加元素)、peek（返回栈顶元素）、pop（弹出栈顶元素）、isEmpty（判读栈是否为空）。
 
 ### 496. 下一个更大元素I
@@ -151,4 +151,85 @@ class MyQueue {
 * empty() -- 返回栈是否为空
 
 解法：
-用两个队列q1，q2实现，
+用两个队列q1，q2实现，当有新元素要push时，将q2元素进入q1，再进入新元素，再把暂时存储在q1的元素进入q2。
+
+```Java
+class MyStack {
+    Queue<Integer> q1;
+    Queue<Integer> q2;
+    /** Initialize your data structure here. */
+    public MyStack() {
+        q1 = new LinkedList<>();
+        q2 = new LinkedList<>();
+    }
+    
+    /** Push element x onto stack. */
+    public void push(int x) {
+       while(!q2.isEmpty()) {
+            q1.offer(q2.poll());
+        }
+        q2.offer(x);
+        while(!q1.isEmpty()) {
+            q2.offer(q1.poll());
+        }
+    }
+    
+    /** Removes the element on top of the stack and returns that element. */
+    public int pop() {
+        return q2.poll();
+    }
+    
+    /** Get the top element. */
+    public int top() {
+        return q2.peek();
+    }
+    
+    /** Returns whether the stack is empty. */
+    public boolean empty() {
+        return q2.isEmpty();
+    }
+}
+```
+### 155.最小栈
+设计一个支持 push，pop，top 操作，并能在常数时间内检索到最小元素的栈。
+
+* push(x) -- 将元素 x 推入栈中。
+* pop() -- 删除栈顶的元素。
+* top() -- 获取栈顶元素。
+* getMin() -- 检索栈中的最小元素。
+
+解法：
+用两个栈，一个栈正常操作，另一个栈存储当前最小值。
+···Java
+class MinStack {
+    Stack<Integer> s1;
+    Stack<Integer> s2;
+    /** initialize your data structure here. */
+    public MinStack() {
+        s1 = new Stack<>();
+        s2 = new Stack<>();
+    }
+    
+    public void push(int x) {
+        s1.push(x);
+        if (s2.isEmpty() || x < s2.peek()) {
+            s2.push(x);
+        } else {
+            s2.push(s2.peek());
+        }
+    }
+    
+    public void pop() {
+        s1.pop();
+        s2.pop();
+    }
+    
+    public int top() {
+        return s1.peek();
+    }
+    
+    public int getMin() {
+        return s2.peek();
+    }
+}
+···
