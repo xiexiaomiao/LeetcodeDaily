@@ -1,2 +1,2 @@
 # LeetcodeDaily
-The solution of leetcode
+分享刷leetcode的日常
