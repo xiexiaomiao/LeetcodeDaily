@@ -142,7 +142,7 @@ class MyQueue {
     }
 }
 ```
-### 225.用队列实现栈
+### 225. 用队列实现栈
 使用队列实现栈的下列操作：
 
 * push(x) -- 元素 x 入栈
@@ -190,7 +190,7 @@ class MyStack {
     }
 }
 ```
-### 155.最小栈
+### 155. 最小栈
 设计一个支持 push，pop，top 操作，并能在常数时间内检索到最小元素的栈。
 
 * push(x) -- 将元素 x 推入栈中。
@@ -232,5 +232,86 @@ class MinStack {
     public int getMin() {
         return s2.peek();
     }
+}
+```
+### 844. 比较含退格的字符串
+给定 S 和 T 两个字符串，当它们分别被输入到空白的文本编辑器后，判断二者是否相等，并返回结果。 # 代表退格字符。
+解法：
+遇到“#”便弹栈。
+```Java
+class Solution {
+    public boolean backspaceCompare(String S, String T) {
+        Stack<Character> ss = new Stack<Character>();
+        Stack<Character> ts = new Stack<Character>();
+        
+        for(int i = 0; i < S.length(); i++) {
+            if(S.charAt(i) != '#')
+                ss.push(S.charAt(i));      
+            else if(!ss.isEmpty())
+                  ss.pop(); 
+        }
+        
+        for(int i = 0; i < T.length(); i++){
+            if(T.charAt(i) != '#')
+                ts.push(T.charAt(i)); 
+            else if(!ts.isEmpty())
+                ts.pop();
+        }
+        
+        return ss.equals(ts);
+    }
+}
+```
+
+### 20. 有效的括号
+给定一个只包括 '('，')'，'{'，'}'，'['，']' 的字符串，判断字符串是否有效。  
+解法：
+初始化栈 S。  
+一次处理表达式的每个括号。  
+如果遇到开括号，我们只需将其推到栈上即可。这意味着我们将稍后处理它，让我们简单地转到前面的 子表达式。  
+如果我们遇到一个闭括号，那么我们检查栈顶的元素。如果栈顶的元素是一个 相同类型的 左括号，那么我们将它从栈中弹出并继续处理。否则，这意味着表达式无效。  
+如果到最后我们剩下的栈中仍然有元素，那么这意味着表达式无效。  
+
+```Java
+class Solution {
+
+  // Hash table that takes care of the mappings.
+  private HashMap<Character, Character> mappings;
+
+  // Initialize hash map with mappings. This simply makes the code easier to read.
+  public Solution() {
+    this.mappings = new HashMap<Character, Character>();
+    this.mappings.put(')', '(');
+    this.mappings.put('}', '{');
+    this.mappings.put(']', '[');
+  }
+
+  public boolean isValid(String s) {
+
+    // Initialize a stack to be used in the algorithm.
+    Stack<Character> stack = new Stack<Character>();
+
+    for (int i = 0; i < s.length(); i++) {
+      char c = s.charAt(i);
+
+      // If the current character is a closing bracket.
+      if (this.mappings.containsKey(c)) {
+
+        // Get the top element of the stack. If the stack is empty, set a dummy value of '#'
+        char topElement = stack.empty() ? '#' : stack.pop();
+
+        // If the mapping for this bracket doesn't match the stack's top element, return false.
+        if (topElement != this.mappings.get(c)) {
+          return false;
+        }
+      } else {
+        // If it was an opening bracket, push to the stack.
+        stack.push(c);
+      }
+    }
+
+    // If the stack still contains elements, then it is an invalid expression.
+    return stack.isEmpty();
+  }
 }
 ```
