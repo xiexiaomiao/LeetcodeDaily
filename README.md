@@ -38,6 +38,7 @@ class Solution {
     }
 }
 ```
+
 ### 682. 棒球比赛
 你现在是棒球比赛记录员。
 给定一个字符串列表，每个字符串可以是以下四种类型之一：
@@ -52,6 +53,33 @@ class Solution {
 解法：
 让我们在处理数据时保持栈上每个有效回合的值。栈是理想的，因为我们只处理涉及最后或倒数第二轮的操作。
 
+```Java
+class Solution {
+    public int calPoints(String[] ops) {
+        Stack<Integer> stack = new Stack();
+
+        for(String op : ops) {
+            if (op.equals("+")) {
+                int top = stack.pop();
+                int newtop = top + stack.peek();
+                stack.push(top);
+                stack.push(newtop);
+            } else if (op.equals("C")) {
+                stack.pop();
+            } else if (op.equals("D")) {
+                stack.push(2 * stack.peek());
+            } else {
+                stack.push(Integer.valueOf(op));
+            }
+        }
+
+        int ans = 0;
+        for(int score : stack) ans += score;
+        return ans;
+    }
+}
+```
+
 ### 232. 用栈实现队列
 使用栈实现队列的下列操作：
 
@@ -62,4 +90,56 @@ empty() -- 返回队列是否为空。
 
 解法：
 用两个栈来s1, s2来实现，push时将元素压入s1，pop时若s2不为空，返回s2.pop()，否则将s1的元素全弹入s2，此时s2栈顶元素就是最先加入的元素。peek操作与pop相似。用一个变量size记录队列的元素个数，size等于0时栈为空。
+
+```Java
+class MyQueue {
+    int size;
+    Stack<Integer> stack1;
+    Stack<Integer> stack2;
+    /** Initialize your data structure here. */
+    public MyQueue() {
+        size = 0;
+        stack1 = new Stack<>();
+        stack2 = new Stack<>();
+    }
+    
+    /** Push element x to the back of queue. */
+    public void push(int x) {
+        stack1.push(x);
+        size++;
+    }
+    
+    /** Removes the element from in front of queue and returns that element. */
+    public int pop() {
+        if (!stack2.isEmpty()) {
+            size--;
+            return stack2.pop();
+        } else {
+            while (!stack1.isEmpty()) {
+                stack2.push(stack1.pop());
+            }
+            size--;
+            return stack2.pop(); 
+        }
+               
+    }
+    
+    /** Get the front element. */
+    public int peek() {
+       if (!stack2.isEmpty()) {
+            return stack2.peek();
+        } else {
+            while (!stack1.isEmpty()) {
+                stack2.push(stack1.pop());
+            }
+            return stack2.peek(); 
+        }
+    }
+    
+    /** Returns whether the queue is empty. */
+    public boolean empty() {
+        return size == 0;
+    }
+}
+```
 
