@@ -297,3 +297,195 @@ class Solution {
     }
 }
 ```
+
+## 堆的题目
+目前还不太懂，先跳过。
+
+## 贪心算法
+
+### 944. 删列造序
+
+给定由 N 个小写字母字符串组成的数组 A，其中每个字符串长度相等。
+
+选取一个删除索引序列，对于 A 中的每个字符串，删除对应每个索引处的字符。 所余下的字符串行从上往下读形成列。
+
+比如，有 A = ["abcdef", "uvwxyz"]，删除索引序列 {0, 2, 3}，删除后 A 为["bef", "vyz"]， A 的列分别为["b","v"], ["e","y"], ["f","z"]。（形式上，第 n 列为 [A[0][n], A[1][n], ..., A[A.length-1][n]]）。
+
+假设，我们选择了一组删除索引 D，那么在执行删除操作之后，A 中所剩余的每一列都必须是 非降序 排列的，然后请你返回 D.length 的最小可能值。
+
+解法：
+
+需要把未排序的列全删除。
+```Java
+class Solution {
+    public int minDeletionSize(String[] A) {
+        int res = 0;
+        for (int i = 0; i < A[0].length(); i++) {
+            for (int j = 0; j < A.length-1; j++){
+                if (A[j].charAt(i) > A[j+1].charAt(i)) {
+                    res++;
+                    break;
+                }
+            }
+        }
+
+        return res;
+    }
+}
+```
+
+### 122. 买股票的最佳时机II
+
+给定一个数组，它的第 i 个元素是一支给定股票第 i 天的价格。
+
+设计一个算法来计算你所能获取的最大利润。你可以尽可能地完成更多的交易（多次买卖一支股票）。
+
+解法：
+
+只要当天价格比前一天的高，就把差价给加上。
+
+```Java
+class Solution {
+    public int maxProfit(int[] prices) {
+        int max = 0;
+        for (int i = 1; i < prices.length; i++) {
+            if (prices[i] > prices[i-1]) {
+                max += (prices[i] - prices[i-1]);
+            }
+        }
+        return max;
+    }
+}
+```
+
+### 860. 柠檬树找钱
+在柠檬水摊上，每一杯柠檬水的售价为 5 美元。
+
+顾客排队购买你的产品，（按账单 bills 支付的顺序）一次购买一杯。
+
+每位顾客只买一杯柠檬水，然后向你付 5 美元、10 美元或 20 美元。你必须给每个顾客正确找零，也就是说净交易是每位顾客向你支付 5 美元。
+
+注意，一开始你手头没有任何零钱。
+
+如果你能给每位顾客正确找零，返回 true ，否则返回 false 。
+
+解法：
+
+情景模拟，记录5、10美元的数量，收到20美元优先找10美元，当5美元找完后返回false。
+
+```Java
+class Solution {
+    public boolean lemonadeChange(int[] bills) {
+        int five = 0, ten = 0;
+        for (int bill: bills) {
+            if (bill == 5)
+                five++;
+            else if (bill == 10) {
+                if (five == 0) return false;
+                five--;
+                ten++;
+            } else {
+                if (five > 0 && ten > 0) {
+                    five--;
+                    ten--;
+                } else if (five >= 3) {
+                    five -= 3;
+                } else {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+}
+```
+
+### 455. 分发饼干
+
+假设你是一位很棒的家长，想要给你的孩子们一些小饼干。但是，每个孩子最多只能给一块饼干。对每个孩子 i ，都有一个胃口值 gi ，这是能让孩子们满足胃口的饼干的最小尺寸；并且每块饼干 j ，都有一个尺寸 sj 。如果 sj >= gi ，我们可以将这个饼干 j 分配给孩子 i ，这个孩子会得到满足。你的目标是尽可能满足越多数量的孩子，并输出这个最大数值。
+
+解法：
+
+对饼干尺寸进行排序，优先给孩子满足胃口的最小的饼干。
+
+```Java
+class Solution {
+    public int findContentChildren(int[] g, int[] s) {
+        int res = 0;
+        boolean[] given = new boolean[s.length];
+        Arrays.sort(s);
+        
+        for (int i = 0; i < g.length; i++) {
+            for (int j = 0; j < s.length; j++) {
+                if (s[j] >= g[i] && !given[j]) {
+                    res++;
+                    given[j] = true;
+                    break;
+                }
+            }
+        }
+        
+        return res;
+    }
+}
+```
+
+### 874.行走机器人
+
+机器人在一个无限大小的网格上行走，从点 (0, 0) 处开始出发，面向北方。该机器人可以接收以下三种类型的命令：
+
+* -2：向左转 90 度
+* -1：向右转 90 度
+* 1 <= x <= 9：向前移动 x 个单位长度
+在网格上有一些格子被视为障碍物。
+
+第 i 个障碍物位于网格点  (obstacles[i][0], obstacles[i][1])
+
+如果机器人试图走到障碍物上方，那么它将停留在障碍物的前一个网格方块上，但仍然可以继续该路线的其余部分。
+
+返回从原点到机器人的最大欧式距离的平方。
+
+解法：
+
+情景模拟，用两个数组dx，dy来控制行走方向，障碍物位置用集合存储来方便查找。
+
+```Java
+class Solution {
+    public int robotSim(int[] commands, int[][] obstacles) {
+        int[] dx = new int[]{0, 1, 0, -1};
+        int[] dy = new int[]{1, 0, -1, 0};
+        int x = 0, y = 0, di = 0;
+
+        // Encode obstacles (x, y) as (x+30000) * (2^16) + (y+30000)
+        Set<Long> obstacleSet = new HashSet();
+        for (int[] obstacle: obstacles) {
+            long ox = (long) obstacle[0] + 30000;
+            long oy = (long) obstacle[1] + 30000;
+            obstacleSet.add((ox << 16) + oy);
+        }
+
+        int ans = 0;
+        for (int cmd: commands) {
+            if (cmd == -2)  //left
+                di = (di + 3) % 4;
+            else if (cmd == -1)  //right
+                di = (di + 1) % 4;
+            else {
+                for (int k = 0; k < cmd; ++k) {
+                    int nx = x + dx[di];
+                    int ny = y + dy[di];
+                    long code = (((long) nx + 30000) << 16) + ((long) ny + 30000);
+                    if (!obstacleSet.contains(code)) {
+                        x = nx;
+                        y = ny;
+                        ans = Math.max(ans, x*x + y*y);
+                    }
+                }
+            }
+        }
+
+        return ans;
+    }
+}
+```
