@@ -489,3 +489,93 @@ class Solution {
     }
 }
 ```
+
+## 排序
+
+### 349.两个数组的交集
+
+给定两个数组，编写一个函数来计算它们的交集。
+
+解法：
+
+没看出来怎么用排序解。用字典存num1的元素，键的值为1。再遍历nums2，键值--，若键值小于1说明该键在nums2中出现了。
+
+```Java
+class Solution {
+    public int[] intersection(int[] nums1, int[] nums2) {
+        Map<Integer, Integer>  map = new HashMap<>();
+        for (int num:nums1) {
+            map.put(num, 1);
+        }
+        
+        List<Integer> nums = new ArrayList<>();
+        for (int num:nums2) {
+            if (map.containsKey(num) && map.get(num) > 0) {
+                map.put(num, map.get(num)-1);
+                nums.add(num);
+            }
+        }
+        
+        int[] res = new int[nums.size()];
+        for (int i = 0; i < nums.size(); i++) {
+            res[i] = nums.get(i);
+        }
+        
+        return res;
+    }
+}
+```
+
+### 350. 两个数组的交集II
+
+和上提一样，只是多了个统计次数。
+
+```Java
+class Solution {
+    public int[] intersect(int[] nums1, int[] nums2) {
+        Map<Integer, Integer> map = new HashMap<>();
+        for (int num:nums1) {
+            if (map.containsKey(num)) {
+                map.put(num, map.get(num)+1);
+            } else {
+                map.put(num, 1);
+            }
+        }
+        
+        List<Integer> nums = new ArrayList<>();
+        for (int num:nums2) {
+            if (map.containsKey(num) && map.get(num) > 0) {
+                map.put(num, map.get(num)-1);
+                nums.add(num);
+            }
+        }
+        
+        int[] res = new int[nums.size()];
+        for (int i = 0; i < nums.size(); i++) {
+            res[i] = nums.get(i);
+        }
+        
+        return res;
+    }
+}
+```
+### 有效的字母异位词
+
+给定两个字符串 s 和 t ，编写一个函数来判断 t 是否是 s 的一个字母异位词。字母异为词就是包含的字母一样，顺序可以不同。
+
+解法：
+
+先判断两个词长度是否相同，再对字母进行排序后比较。
+
+```Java
+class Solution {
+    public boolean isAnagram(String s, String t) {
+        if(s.length() != t.length()) return false;
+        char[] as = s.toCharArray();
+        char[] ts = t.toCharArray();
+        Arrays.sort(as);
+        Arrays.sort(ts);
+        return Arrays.equals(as, ts);
+    }
+}
+```
