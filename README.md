@@ -579,3 +579,148 @@ class Solution {
     }
 }
 ```
+
+## 关于树的题目
+
+树的题目有点多，有得刷了。
+### 104.二叉树的最大深度
+
+给定一个二叉树，找出其最大深度。
+
+二叉树的深度为根节点到最远叶子节点的最长路径上的节点数。
+
+解法：
+
+利用递归，树的高度等于左子树的高度加1或右子树的高度加1。叶节点高度为1。
+
+```Java
+class Solution {
+    public int maxDepth(TreeNode root) {
+        if (root == null)
+            return 0;
+        if (root.left == null && root.right == null)
+            return 1;
+        return Math.max(1 + maxDepth(root.left), 1 + maxDepth(root.right));
+    }
+}
+```
+
+### 226.翻转二叉树
+
+翻转一棵二叉树。
+
+示例：
+
+输入：
+
+     4
+   /   \
+  2     7
+ / \   / \
+1   3 6   9
+输出：
+
+     4
+   /   \
+  7     2
+ / \   / \
+9   6 3   1
+
+解法：
+
+递归。翻转后的二叉树的左子树是右子树的翻转二叉树，右子树是左子树的翻转二叉树。
+
+```Java
+class Solution {
+    public TreeNode invertTree(TreeNode root) {
+        if (root == null)
+            return root;
+        if (root.left == null && root.right == null)
+            return root;
+        TreeNode left = root.left;
+        TreeNode right = root.right;
+        
+        root.left = invertTree(right);
+        root.right = invertTree(left);
+        
+        return root;
+    }
+}
+```
+
+### 589.n叉树的前序遍历
+
+给定一个 N 叉树，返回其节点值的后序遍历。
+
+解法：
+
+用栈，先从右开始把孩子存入栈中，之后栈顶元素便是最左边的孩子，弹出栈顶元素并将其孩子入栈。重复直到栈空。
+
+```Java
+class Solution {
+    public List<Integer> preorder(Node root) {
+        List<Integer> res = new ArrayList<Integer>();
+        if (root == null)
+            return res;
+        
+        Stack<Node> stack = new Stack<>();  
+        stack.push(root);
+        
+        while (!stack.isEmpty()) {
+            Node cur = stack.pop();
+            res.add(cur.val);
+            if (!cur.children.isEmpty()) {
+                for (int i = cur.children.size()-1; i >= 0; i--) {
+                    stack.push(cur.children.get(i));
+                }
+            }
+        }
+        
+        return res;
+    }
+}
+```
+
+### 700.二叉树中的搜索
+
+给定二叉搜索树（BST）的根节点和一个值。 你需要在BST中找到节点值等于给定值的节点。 返回以该节点为根的子树。 如果节点不存在，则返回 NULL。
+
+例如，
+
+给定二叉搜索树:
+
+        4
+       / \
+      2   7
+     / \
+    1   3
+
+和值: 2
+你应该返回如下子树:
+
+      2     
+     / \   
+    1   3
+    
+    
+解法：
+
+利用二叉搜索树节点左孩子值小于节点，右孩子节点值大于节点的性质来加快效率。
+
+```Java
+class Solution {
+    public TreeNode searchBST(TreeNode root, int val) {
+        if (root == null) {
+            return null;
+        }
+
+        if (root.val == val) {
+            return root;
+        } else if (root.val > val) { // 在左子树中查找
+            return searchBST(root.left, val);
+        } else { // 在右子树中查找
+            return searchBST(root.right, val);
+        }
+    }
+}
+```
