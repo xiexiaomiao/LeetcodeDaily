@@ -1,4 +1,4 @@
-# LeetcodeDaily
+# leetcode
 记录刷leetcode的日常
 先从简单难度开始按标签刷起。
 
