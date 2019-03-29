@@ -1,6 +1,8 @@
 # leetcode题解
 leetcode部分题目题解
 
+@[TOC]目录
+
 ## 栈
 栈（Stack）是后进先出的列表，常用操作有push（添加元素)、peek（返回栈顶元素）、pop（弹出栈顶元素）、isEmpty（判读栈是否为空）。
 
