@@ -1,6 +1,5 @@
-# leetcode
-记录刷leetcode的日常
-先从简单难度开始按标签刷起。
+# leetcode题解
+leetcode部分题目题解
 
 ## 栈的题目
 栈（Stack）是后进先出的列表，常用操作有push（添加元素)、peek（返回栈顶元素）、pop（弹出栈顶元素）、isEmpty（判读栈是否为空）。
